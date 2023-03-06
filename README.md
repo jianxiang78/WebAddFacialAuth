@@ -2,7 +2,7 @@
 
 On the basis of the user registration and authentication login of the WEB system, the project adds the face recognition technology of the third party artificial intelligence, and also realizes the user login authentication.
 
-This project is a simple and complete WEB microservice system. The front-end uses HTML5, JavaScript, FaceIO, JQuery
+This project is a simple and complete WEB microservice system. The front-end uses HTML5, JavaScript, FaceIO, JQuery, Bootstrap
 , thymeleaf, the back-end
   uses SpringBoot microservice, and the database uses MySQL. The front-end integrates FaceIO in HTML to realize the
    docking of AI.
@@ -22,7 +22,7 @@ Directory structure of source code\
 |   |-- screenshot
 
 ## Technology Stack
-Front-end: HTML5, JavaScript, FaceIO, JQuery, thymeleaf\
+Front-end: HTML5, JavaScript, FaceIO, JQuery, Bootstrap, thymeleaf\
 Back-end: Java 1.8, Spring Boot, Mybatis, Maven\
 Development tool: IntelliJ IDEA 2019\
 Database: MySQL 5.7+
