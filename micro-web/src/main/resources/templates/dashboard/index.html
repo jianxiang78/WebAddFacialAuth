@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="js/fontawesome.6.1.0.all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+
+    <a class="navbar-brand ps-3" href="index.html">Web Add FacialAuth</a>
+
+    <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+
+    </div>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="login.html">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Dashboard</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Demo</li>
+                </ol>
+                <div class="row">
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">User Name</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <span class="small" th:text="${webUser.userName}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-warning text-white mb-4">
+                            <div class="card-body">Last Login Time</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <span class="small" th:text="${webUser.lastLoginTime}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">Last Login Type</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <span class="small" th:text="${webUser.lastLoginType}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-danger text-white mb-4">
+                            <div class="card-body">Facial Auth</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between"
+                                 th:if="${#strings.isEmpty(webUser.facialId)}">
+                                <a class="small text-white stretched-link" onclick="startFacialAuth()">Unbound</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between"
+                                 th:if="${!#strings.isEmpty(webUser.facialId)}">
+                                <span class="small text-white stretched-link" th:text="${webUser.facialId}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Auto17.com 2023</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="js/bootstrap.5.1.3.min.js" crossorigin="anonymous"></script>
+<script src="js/jquery.2.1.4.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="https://cdn.faceio.net/fio.js"></script>
+
+<script>
+    let webFaceIO;
+    operatePost("login/faceIOAppCode","",initFaceIO);
+
+    function initFaceIO(result) {
+        webFaceIO = new faceIO(result.msg);
+    }
+
+    function startFacialAuth() {
+        webFaceIO.enroll({
+            "locale": "auto"
+        }).then(userInfo => {
+            addFacialAuth(userInfo);
+        }).catch(errCode => {
+            console.log(errCode);
+            webFaceIO.restartSession();
+        })
+    }
+
+    function addFacialAuth(userInfo) {
+        let obj = {};
+        obj.facialId = userInfo.facialId;
+        operatePost("login/addFacialAuth",obj,addFacialAuthEnd);
+    }
+
+    function addFacialAuthEnd(result) {
+        if(result.code===1){
+            window.location.href='dashboard'
+        }else {
+            alert("add Facial Auth fail")
+        }
+    }
+
+
+</script>
+</body>
+</html>

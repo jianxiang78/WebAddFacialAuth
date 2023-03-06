@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+# log
+logging:
+  level:
+    com:
+      operatorTracker: debug
+    org:
+      springframework: warn
+  path: logs/app-api
+
+# MyBatis
+mybatis:
+  typeAliasesPackage: com.auto17.WebAddFacialAuth.domain
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+spring:
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/facelogindb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+    username: faceloginuser
+    password: 123456
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html

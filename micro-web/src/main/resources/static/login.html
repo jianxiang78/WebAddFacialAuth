@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Web APP</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="js/fontawesome.6.1.0.all.js"></script>
+
+</head>
+
+<body class="bg-black">
+
+
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header">
+                                <h3 class="text-center font-weight-light my-4">
+                                    Web APP Login
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="form-webUser-login" onSubmit="return userLogin();">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="loginName" type="text"
+                                               name="loginName"
+                                               placeholder="Login name" required/>
+                                        <label for="loginName">Login name</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="passWord" type="password"
+                                               name="passWord"
+                                               placeholder="Password" required/>
+                                        <label for="passWord">Password</label>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                        <button type="submit" class="btn btn-primary" style="width: 100%">Login</button>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                        <a class="btn btn-primary" href="#" onClick="faceLogin()" style="width: 100%">
+                                            Face Recognition Login
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer text-center py-3">
+                                <div class="small">
+                                    <a href="signUp.html">Need an account? Sign up!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="js/bootstrap.5.1.3.min.js"></script>
+<script src="js/jquery.2.1.4.min.js"></script>
+<script src="js/scripts.js"></script>
+<script src="https://cdn.faceio.net/fio.js"></script>
+<script>
+    let webFaceIO;
+    operatePost("login/faceIOAppCode","",initFaceIO);
+
+    function initFaceIO(result) {
+        webFaceIO = new faceIO(result.msg);
+    }
+
+    function faceLogin() {
+        webFaceIO.authenticate({
+            "locale": "auto"
+        }).then(userInfo => {
+            checkFaceLogin(userInfo);
+        }).catch(errCode => {
+            console.log(errCode);
+            webFaceIO.restartSession();
+        })
+    }
+
+    function checkFaceLogin(userInfo) {
+        let obj = {};
+        obj.facialId = userInfo.facialId;
+        operatePost("login/signInFacialAuth",obj,checkEnd);
+    }
+
+    function userLogin() {
+        operatePost("login/signInLogin",$('#form-webUser-login').serialize(),checkEnd);
+        return false;
+    }
+
+    function checkEnd(result) {
+        if(result.code===1){
+            window.location.href="dashboard"
+        }else {
+            alert(result.msg)
+        }
+    }
+</script>
+</body>
+</html>

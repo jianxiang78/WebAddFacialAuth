@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.auto17.WebAddFacialAuth.mapper.WebUserMapper">
+
+    <resultMap type="WebUser" id="WebUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="loginName"    column="login_name"    />
+        <result property="passWord"    column="pass_word"    />
+        <result property="facialId"    column="facial_id"    />
+        <result property="lastLoginType"    column="last_login_type"    />
+        <result property="lastLoginTime"    column="last_login_time"    />
+    </resultMap>
+
+    <sql id="selectWebUserVo">
+        select user_id, user_name, login_name, pass_word, facial_id, last_login_type, last_login_time from web_user
+    </sql>
+
+    <select id="selectWebUserList" parameterType="WebUser" resultMap="WebUserResult">
+        <include refid="selectWebUserVo"/>
+        <where>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="loginName != null  and loginName != ''"> and login_name like concat('%', #{loginName}, '%')</if>
+            <if test="passWord != null  and passWord != ''"> and pass_word = #{passWord}</if>
+            <if test="facialId != null  and facialId != ''"> and facial_id = #{facialId}</if>
+            <if test="lastLoginType != null  and lastLoginType != ''"> and last_login_type = #{lastLoginType}</if>
+            <if test="lastLoginTime != null "> and last_login_time = #{lastLoginTime}</if>
+        </where>
+    </select>
+
+    <select id="selectWebUserById" parameterType="Long" resultMap="WebUserResult">
+        <include refid="selectWebUserVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertWebUser" parameterType="WebUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into web_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="loginName != null and loginName != ''">login_name,</if>
+            <if test="passWord != null">pass_word,</if>
+            <if test="facialId != null">facial_id,</if>
+            <if test="lastLoginType != null">last_login_type,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="loginName != null and loginName != ''">#{loginName},</if>
+            <if test="passWord != null">#{passWord},</if>
+            <if test="facialId != null">#{facialId},</if>
+            <if test="lastLoginType != null">#{lastLoginType},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebUser" parameterType="WebUser">
+        update web_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
+            <if test="passWord != null">pass_word = #{passWord},</if>
+            <if test="facialId != null">facial_id = #{facialId},</if>
+            <if test="lastLoginType != null">last_login_type = #{lastLoginType},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteWebUserById" parameterType="Long">
+        delete from web_user where user_id = #{userId}
+    </delete>
+
+</mapper>
