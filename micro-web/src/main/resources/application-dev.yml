@@ -8,7 +8,7 @@ logging:
       operatorTracker: debug
     org:
       springframework: warn
-  path: logs/app-api
+  path: logs/micro-web
 
 # MyBatis
 mybatis:
